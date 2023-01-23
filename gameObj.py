@@ -11,7 +11,7 @@ from globalVars import *
 class Invaders(Sprite):
 	def __init__(self, xPos, yPos):
 		Sprite.__init__(self)
-		self.image = pygame.image.load("images/spaceship.png")
+		self.image = pygame.image.load("images/invader.png")
 		self.image = pygame.transform.scale(self.image, (50, 50))
 
 		self.direction = 1
@@ -175,7 +175,7 @@ class Explosion(Sprite):
 class BigSpaceship(Sprite):
 	def __init__(self, xPos, yPos):
 		Sprite.__init__(self)
-		self.image = pygame.image.load("images/exp1.png")
+		self.image = pygame.image.load("images/bigship.png")
 		self.image = pygame.transform.scale(self.image, (50, 50))
 
 		self.rect = self.image.get_rect()

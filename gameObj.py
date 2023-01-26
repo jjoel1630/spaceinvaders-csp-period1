@@ -8,7 +8,9 @@ from pygame import K_RIGHT as rightKey
 
 from globalVars import *
 
+# Invaders class
 class Invaders(Sprite):
+	# Constructor with x, y pos
 	def __init__(self, xPos, yPos):
 		Sprite.__init__(self)
 		self.image = pygame.image.load("images/invader.png")
@@ -20,6 +22,7 @@ class Invaders(Sprite):
 		self.rect = self.image.get_rect()
 		self.rect.center = [xPos, yPos]
 
+	# Update funtion, move the invaders back & forth
 	def update(self):
 		self.rect.x += self.direction
 		self.move_counter += 1
@@ -27,7 +30,9 @@ class Invaders(Sprite):
 			self.direction *= -1
 			self.move_counter *= self.direction
 
+# Lasers class for ship
 class Lasers(Sprite):
+	# Constructor for laser
 	def __init__(self, xPos, yPos, invaderGrp, explosionGrp, explosionSound, bigShipGrp):
 		Sprite.__init__(self)
 		self.image = pygame.image.load("images/lazer.webp")
@@ -42,8 +47,10 @@ class Lasers(Sprite):
 		self.explosionSound = explosionSound
 		self.bigShipGrp = bigShipGrp
 
+	# Update function for laser
 	def update(self):
 		self.rect.y -= 5
+		# Remove laser if out of bounds & check if collided with a big ship or an invader group
 		if self.rect.bottom < 0:
 			self.kill()
 		if spritecollide(self, self.invaderGrp, True):
@@ -57,7 +64,9 @@ class Lasers(Sprite):
 			self.explosionGrp.add(explosion)
 			self.explosionSound.play()
 
+# Invader laser
 class InvaderLaser(Sprite):
+	# Constructor for invader laser
 	def __init__(self, xPos, yPos, screenHeight, spaceshipGrp, explosionGrp, laserSound):
 		Sprite.__init__(self)
 		self.image = pygame.image.load("images/lazer.webp")
@@ -71,7 +80,9 @@ class InvaderLaser(Sprite):
 		self.rect = self.image.get_rect()
 		self.rect.center = [xPos, yPos]
 
+	# Update function for invader laser
 	def update(self):
+		# Move the laser & check if collided with ship
 		self.rect.y += 5
 		if self.rect.top > self.screenHeight:
 			self.kill()		
@@ -82,7 +93,9 @@ class InvaderLaser(Sprite):
 			explosion = Explosion(self.rect.centerx, self.rect.centery, 1)
 			self.explosionGrp.add(explosion)
 
+# Spaceship class
 class Spaceship(Sprite):
+	# Spaceship constructor
 	def __init__(self, xPos, yPos, health, screenWidth, screenHeight, laserGrp, screen, invaderGrp, explosionGrp, explosionSound, laserSound, bigShipGrp):
 		Sprite.__init__(self)
 		self.image = pygame.image.load("images/spaceship.png")
@@ -107,11 +120,14 @@ class Spaceship(Sprite):
 
 		self.laserSound = laserSound
 
+	# Update function for spaceship
 	def update(self):
+		# Set ship speed & gameover status
 		speed = 8
 
 		gmOver = 0
 
+		# Move ship according to arrow keys
 		keyPress = pygame.key.get_pressed()
 		if keyPress[leftKey] and self.rect.x - 50 > 0:
 			self.rect.x -= speed
@@ -128,6 +144,7 @@ class Spaceship(Sprite):
 
 		self.mask = pygame.mask.from_surface(self.image)
 
+		# Check for health & update health bar
 		pygame.draw.rect(self.screen, (255, 0, 0), (self.rect.x, self.rect.bottom + 10, self.rect.width, 15))
 		if self.health_remaining > 0:
 			pygame.draw.rect(self.screen, (0, 255, 0), (self.rect.x, self.rect.bottom + 10, int(self.rect.width * (self.health_remaining / self.health_start)), 15))
@@ -139,7 +156,9 @@ class Spaceship(Sprite):
 
 		return gmOver
 
+# Explosion class to play sounds of the explosion
 class Explosion(Sprite):
+	# Constructor for class
 	def __init__(self, xPos, yPos, size):
 		Sprite.__init__(self)
 		self.images = []
@@ -160,6 +179,7 @@ class Explosion(Sprite):
 		self.rect.center = [xPos, yPos]
 		self.counter = 0
 
+	# Update function for the explosion
 	def update(self):
 		explosionSpeed = 3
 		self.counter += 1
@@ -172,7 +192,10 @@ class Explosion(Sprite):
 		if self.index >= len(self.images) - 1 and self.counter >= explosionSpeed:
 			self.kill()
 
+
+# Custom game element class (Big spaceship spawns randomly and moves very fast across the screen)
 class BigSpaceship(Sprite):
+	# Constructor class
 	def __init__(self, xPos, yPos):
 		Sprite.__init__(self)
 		self.image = pygame.image.load("images/bigship.png")
@@ -181,6 +204,7 @@ class BigSpaceship(Sprite):
 		self.rect = self.image.get_rect()
 		self.rect.center = [xPos, yPos]
 	
+	# Update function for the sprite
 	def update(self):
 		self.rect.x -= 10
 		if self.rect.right < 0:
